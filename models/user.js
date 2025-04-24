@@ -1,34 +1,31 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 
-const Contact = sequelize.define(
-  'contact', {
+const User = sequelize.define(
+  'user', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    name: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
-    phone: {
+    subscription: {
+      type: DataTypes.ENUM('starter', 'pro', 'business'),
+      defaultValue: 'starter'
+    },
+    token: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    favorite: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    owner: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      defaultValue: null,
     },
   }
 );
 
-export default Contact;
+export default User;
