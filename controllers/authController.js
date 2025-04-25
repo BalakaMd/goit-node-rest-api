@@ -69,3 +69,29 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
+export const logout = async (req, res, next) => {
+  try {
+    const { user } = req;
+    
+    user.token = null;
+    await user.save();
+    
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const current = async (req, res, next) => {
+  try {
+    const { user } = req;
+    
+    res.json({
+      email: user.email,
+      subscription: user.subscription
+    });
+  } catch (error) {
+    next(error);
+  }
+};
