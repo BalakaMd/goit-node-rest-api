@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import gravatar from 'gravatar';
 import User from '../models/user.js';
 import HttpError from '../helpers/HttpError.js';
 
@@ -18,16 +19,21 @@ export const register = async (req, res, next) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     
+    // Generate avatar URL using gravatar
+    const avatarURL = `https:${gravatar.url(email, { s: '250', d: 'identicon', r: 'pg' })}`;
+    
     // Create new user
     const newUser = await User.create({
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      avatarURL
     });
     
     res.status(201).json({
       user: {
         email: newUser.email,
-        subscription: newUser.subscription
+        subscription: newUser.subscription,
+        avatarURL: newUser.avatarURL
       }
     });
   } catch (error) {
@@ -62,7 +68,8 @@ export const login = async (req, res, next) => {
       token,
       user: {
         email: user.email,
-        subscription: user.subscription
+        subscription: user.subscription,
+        avatarURL: user.avatarURL
       }
     });
   } catch (error) {
@@ -89,7 +96,8 @@ export const current = async (req, res, next) => {
     
     res.json({
       email: user.email,
-      subscription: user.subscription
+      subscription: user.subscription,
+      avatarURL: user.avatarURL
     });
   } catch (error) {
     next(error);
